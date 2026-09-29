@@ -3,7 +3,7 @@ export interface ApiError {
 }
 
 /** Fires when any authenticated request comes back 401 so the app can log out. */
-export const AUTH_EXPIRED_EVENT = "sr:auth-expired";
+export const AUTH_EXPIRED_EVENT = "mrd:auth-expired";
 
 let notifiedExpired = false;
 

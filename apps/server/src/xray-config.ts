@@ -1,12 +1,6 @@
 /**
- * SideRail - Xray-core VPN management panel
- * Copyright (c) 2025 icubaby. All rights reserved.
- * Official repository: https://github.com/icubaby/SideRail
- *
- * Licensed under the SideRail Proprietary License (see LICENSE).
- * Unauthorized selling, white-labeling, or removal of attribution,
- * branding, or the embedded authorship identifiers is prohibited.
- * Watermark: sr-icubaby-2025-9f4c1a7e
+ * Builds the Xray-core configuration from the current inbounds,
+ * attached clients, and routing rules.
  */
 import { config } from "./config.js";
 import { listEnabledInbounds } from "./inbounds.js";

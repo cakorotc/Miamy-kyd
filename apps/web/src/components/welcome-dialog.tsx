@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Heart, Star, ShieldAlert, Github, Send } from "lucide-react";
+import { Heart, Star, Github } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -7,12 +7,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { RailLogo } from "@/components/rail-logo";
+import { MeridianLogo } from "@/components/meridian-logo";
 import { useGitHubStars } from "@/components/github-button";
 import { useI18n } from "@/lib/i18n";
-import { GITHUB_URL, TELEGRAM_URL } from "@/lib/brand";
+import { GITHUB_URL } from "@/lib/brand";
 
-const STORAGE_KEY = "sr_welcome_seen_session";
+const STORAGE_KEY = "mrd_welcome_seen_session";
 
 export function WelcomeDialog() {
   const [open, setOpen] = React.useState(false);
@@ -21,8 +21,8 @@ export function WelcomeDialog() {
 
   React.useEffect(() => {
     if (sessionStorage.getItem(STORAGE_KEY) !== "1") {
-      const t = setTimeout(() => setOpen(true), 500);
-      return () => clearTimeout(t);
+      const timer = setTimeout(() => setOpen(true), 500);
+      return () => clearTimeout(timer);
     }
   }, []);
 
@@ -35,29 +35,20 @@ export function WelcomeDialog() {
     <Dialog open={open} onOpenChange={(o) => (!o ? close() : setOpen(o))}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <div className="mx-auto mb-2 grid h-16 w-16 place-items-center rounded-base border-2 border-border bg-main text-mtext neo-shadow animate-float">
-            <RailLogo className="h-9 w-9" />
+          <div className="mx-auto mb-2 grid h-16 w-16 place-items-center rounded-card border border-main/40 bg-main/10 text-main shadow-glow animate-[float_3s_ease-in-out_infinite]">
+            <MeridianLogo className="h-9 w-9" />
           </div>
           <DialogTitle className="text-center text-2xl">{t("welcomeTitle")}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
-          <p className="text-center text-sm font-base text-text/70">
-            {t("welcomeCrafted")} <span className="font-heading text-text">icubaby</span>{" "}
-            {t("welcomeAndShared")} <span className="font-heading text-text">{t("welcomeFree")}</span>.
-          </p>
+          <p className="text-center text-sm font-base text-muted">{t("welcomeDesc")}</p>
 
-          <div className="flex items-start gap-3 rounded-base border-2 border-border bg-red-300/20 p-3">
-            <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
-            <p className="text-sm font-base text-text/80">
-              <span className="font-heading">{t("doNotSell")}</span> {t("welcomeSellWarn")}
-            </p>
-          </div>
-
-          <div className="flex items-start gap-3 rounded-base border-2 border-border bg-main/15 p-3">
+          <div className="flex items-start gap-3 rounded-base border border-main/25 bg-main/10 p-3">
             <Heart className="mt-0.5 h-5 w-5 shrink-0 text-main" fill="currentColor" />
-            <p className="text-sm font-base text-text/80">
-              {t("welcomeStar")} <span className="font-heading">{t("star")}</span> {t("welcomeStarEnd")}
+            <p className="text-sm font-base text-text/85">
+              {t("welcomeStar")} <span className="font-semibold">{t("star")}</span>{" "}
+              {t("welcomeStarEnd")}
             </p>
           </div>
 
@@ -66,27 +57,16 @@ export function WelcomeDialog() {
             target="_blank"
             rel="noreferrer"
             onClick={close}
-            className="flex items-center justify-between gap-2 rounded-base border-2 border-border bg-bw px-3 py-2.5 font-heading text-sm text-text transition-all hover:bg-main hover:text-mtext hover:neo-shadow"
+            className="flex items-center justify-between gap-2 rounded-base border border-border bg-surface2/60 px-3 py-2.5 text-sm font-semibold text-text transition-colors hover:border-main/40 hover:text-main"
           >
             <span className="flex items-center gap-2">
               <Github className="h-5 w-5" />
               {t("starOnGithub")}
             </span>
-            <span className="flex items-center gap-1 rounded-[4px] border-2 border-border bg-main px-1.5 text-xs text-mtext">
+            <span className="flex items-center gap-1 rounded-full border border-main/30 bg-main/15 px-1.5 text-xs font-semibold text-main">
               <Star className="h-3 w-3" fill="currentColor" />
               {stars ?? 0}
             </span>
-          </a>
-
-          <a
-            href={TELEGRAM_URL}
-            target="_blank"
-            rel="noreferrer"
-            onClick={close}
-            className="flex items-center justify-center gap-2 rounded-base border-2 border-border bg-bw px-3 py-2.5 font-heading text-sm text-text transition-all hover:bg-main hover:text-mtext hover:neo-shadow"
-          >
-            <Send className="h-5 w-5" />
-            Telegram
           </a>
 
           <Button variant="neutral" className="w-full" onClick={close}>

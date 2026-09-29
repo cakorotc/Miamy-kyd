@@ -69,20 +69,20 @@ export default function SetupPage() {
         <div className="space-y-2">
           <Label htmlFor="username">{t("ownerUsername")}</Label>
           <div className="relative">
-            <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text/40" />
+            <User className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
             <Input
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               autoComplete="username"
-              className="pl-9"
+              className="ps-9"
             />
           </div>
         </div>
         <div className="space-y-2">
           <Label htmlFor="password">{t("password")}</Label>
           <div className="relative">
-            <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text/40" />
+            <Lock className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
             <Input
               id="password"
               type={showPass ? "text" : "password"}
@@ -90,12 +90,12 @@ export default function SetupPage() {
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="new-password"
               placeholder={t("atLeast6")}
-              className="px-9"
+              className="ps-9 pe-9"
             />
             <button
               type="button"
               onClick={() => setShowPass((v) => !v)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-text/40 transition-colors hover:text-text"
+              className="absolute end-3 top-1/2 -translate-y-1/2 text-muted transition-colors hover:text-text"
               tabIndex={-1}
               aria-label={showPass ? "Hide password" : "Show password"}
             >
@@ -106,20 +106,20 @@ export default function SetupPage() {
         <div className="space-y-2">
           <Label htmlFor="confirm">{t("confirmPassword")}</Label>
           <div className="relative">
-            <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text/40" />
+            <Lock className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
             <Input
               id="confirm"
               type={showPass ? "text" : "password"}
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               autoComplete="new-password"
-              className="pl-9"
+              className="ps-9"
             />
           </div>
         </div>
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? t("creating") : t("createAccount")}
-          <ArrowRight className="h-4 w-4" />
+          <ArrowRight className="h-4 w-4 rtl:rotate-180" />
         </Button>
       </form>
     </AuthShell>

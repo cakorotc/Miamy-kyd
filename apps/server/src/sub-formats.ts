@@ -1,3 +1,7 @@
+/**
+ * Clash Meta (YAML) and sing-box (JSON) subscription format builders.
+ * Proxy names mirror the inbound tag so client-side lists match the panel.
+ */
 import type { Inbound, UserWithInbounds } from "./types.js";
 import { getSetting } from "./db.js";
 
@@ -10,10 +14,6 @@ interface Ctx {
   host: string;
   user: UserWithInbounds;
   inbound: Inbound;
-}
-
-function net(inbound: Inbound): string {
-  return inbound.transport === "xhttp" ? "xhttp" : inbound.transport;
 }
 
 function clashProxy(ctx: Ctx): Record<string, unknown> | null {
@@ -100,11 +100,11 @@ export function buildClashConfig(
     yaml.push(`  - { ${parts.join(", ")} }`);
   }
   yaml.push("proxy-groups:");
-  yaml.push(`  - name: SideRail`);
+  yaml.push(`  - name: Meridian`);
   yaml.push(`    type: select`);
   yaml.push(`    proxies: [${names.join(", ")}]`);
   yaml.push("rules:");
-  yaml.push("  - MATCH,SideRail");
+  yaml.push("  - MATCH,Meridian");
   return yaml.join("\n");
 }
 
@@ -170,11 +170,11 @@ export function buildSingboxConfig(
 
   const tags = outbounds.map((o) => o.tag as string);
 
-  const config = {
+  const out = {
     outbounds: [
       {
         type: "selector",
-        tag: "SideRail",
+        tag: "Meridian",
         outbounds: [...tags, "direct"],
         default: tags[0],
       },
@@ -182,7 +182,5 @@ export function buildSingboxConfig(
       { type: "direct", tag: "direct" },
     ],
   };
-  return JSON.stringify(config, null, 2);
+  return JSON.stringify(out, null, 2);
 }
-
-void net;

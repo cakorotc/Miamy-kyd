@@ -4,26 +4,25 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 truncate rounded-base text-sm font-heading transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 truncate rounded-base text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "border-2 border-border bg-main text-mtext neo-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none active:translate-x-boxShadowX active:translate-y-boxShadowY active:shadow-none",
+          "bg-main text-mtext shadow-sm hover:bg-main/90 active:bg-main/80",
         neutral:
-          "border-2 border-border bg-bw text-text neo-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none",
-        reverse:
-          "border-2 border-border bg-main text-mtext hover:neo-shadow hover:-translate-x-boxShadowX hover:-translate-y-boxShadowY",
+          "border border-border bg-surface2 text-text hover:border-border hover:bg-surface2/60 hover:text-text",
         danger:
-          "border-2 border-border bg-red-400 text-black neo-shadow hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none",
-        ghost: "hover:bg-main/20 text-text",
-        link: "text-text underline-offset-4 hover:underline",
+          "border border-danger/30 bg-danger/10 text-danger hover:bg-danger/20 hover:border-danger/40",
+        ghost: "text-muted hover:bg-surface2 hover:text-text",
+        link: "text-main underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-10 px-4 py-2",
+        default: "h-10 px-4",
         sm: "h-9 px-3 text-xs",
-        lg: "h-12 px-8 text-base",
+        lg: "h-11 px-6 text-sm",
         icon: "h-10 w-10",
+        "icon-sm": "h-8 w-8",
       },
     },
     defaultVariants: {

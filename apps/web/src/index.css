@@ -3,33 +3,20 @@
 @tailwind utilities;
 
 :root {
-  --main: #a3e635;
-  --overlay: rgba(0, 0, 0, 0.8);
-  --bg: #dfe5f2;
-  --bw: #fff;
-  --blank: #000;
-  --border: #000;
-  --text: #000;
-  --mtext: #000;
-  --ring: #000;
-  --ring-offset: #fff;
-  --shadow: 4px 4px 0px 0px var(--border);
-  --gap: 1rem;
-  --duration: 40s;
-}
-
-.dark {
-  --main: #a3e635;
-  --overlay: rgba(0, 0, 0, 0.85);
-  --bg: #0b0b0f;
-  --bw: #16161d;
-  --blank: #fff;
-  --border: #000;
-  --text: #e8e8ea;
-  --mtext: #000;
-  --ring: #a3e635;
-  --ring-offset: #0b0b0f;
-  --shadow: 4px 4px 0px 0px #000;
+  --bg: #0a0f1e;
+  --surface: #10172a;
+  --surface-2: #182238;
+  --border: #223052;
+  --text: #e7edf8;
+  --muted: #8fa0bd;
+  --main: #38bdf8;
+  --mtext: #06131f;
+  --overlay: rgba(4, 8, 18, 0.72);
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #fb7185;
+  --info: #818cf8;
+  --ring: rgba(56, 189, 248, 0.45);
 }
 
 * {
@@ -45,18 +32,24 @@ body,
 body {
   background-color: var(--bg);
   color: var(--text);
+  font-family: "Inter", "Vazirmatn", system-ui, sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
 }
 
+/* Persian script: the fallback stack already covers it; tighten tracking
+   for Latin display faces only, and give body text breathing room. */
+html[lang="fa"] body {
+  letter-spacing: 0;
+  line-height: 1.7;
+}
+
+::selection {
+  background: rgba(56, 189, 248, 0.3);
+}
+
 @layer utilities {
-  .neo-shadow {
-    box-shadow: var(--shadow);
-  }
-  .neo-border {
-    border: 2px solid var(--border);
-  }
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
@@ -65,32 +58,8 @@ body {
     scrollbar-width: none;
   }
   .grid-dots {
-    background-image: radial-gradient(var(--border) 1px, transparent 1px);
-    background-size: 22px 22px;
-    opacity: 0.15;
-  }
-}
-
-@keyframes wiggle {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(-12deg);
-  }
-  75% {
-    transform: rotate(12deg);
-  }
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
+    background-image: radial-gradient(rgba(143, 160, 189, 0.16) 1px, transparent 1px);
+    background-size: 26px 26px;
   }
 }
 
@@ -130,32 +99,13 @@ body {
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
+@keyframes float {
+  0%,
   100% {
-    background-position: 200% 0;
-  }
-}
-
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
     transform: translateY(0);
   }
-}
-
-@keyframes marquee-badges {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
+  50% {
+    transform: translateY(-5px);
   }
 }
 
@@ -171,7 +121,10 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--main);
-  border: 2px solid var(--border);
-  border-radius: 6px;
+  background: #2a3a5f;
+  border: 2px solid var(--bg);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #35497a;
 }

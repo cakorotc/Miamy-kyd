@@ -1,8 +1,12 @@
+/**
+ * Public subscription endpoints: JSON payload, base64 link list,
+ * Clash and sing-box config exports, and the HTML sub page.
+ */
 import { Router } from "express";
 import path from "node:path";
 import fs from "node:fs";
 import { db } from "./db.js";
-import { config, publicHost } from "./config.js";
+import { publicHost } from "./config.js";
 import { listInbounds } from "./inbounds.js";
 import { buildUserLinks } from "./links.js";
 import { buildClashConfig, buildSingboxConfig } from "./sub-formats.js";
@@ -103,7 +107,7 @@ sub.get("/:token/clash", (req, res) => {
     return;
   }
   res.setHeader("Content-Type", "text/yaml; charset=utf-8");
-  res.setHeader("Profile-Title", Buffer.from(`SideRail ${data.user.email}`).toString("base64"));
+  res.setHeader("Profile-Title", Buffer.from(`Meridian ${data.user.email}`).toString("base64"));
   res.send(buildClashConfig(host, data.user, data.inbounds));
 });
 
@@ -148,8 +152,6 @@ sub.get("/:token", (req, res) => {
   res.setHeader("Content-Type", "text/plain; charset=utf-8");
   res.setHeader("Subscription-Userinfo", subUserInfo(data.user));
   res.setHeader("Profile-Update-Interval", "12");
-  res.setHeader("Profile-Title", Buffer.from(`SideRail ${data.user.email}`).toString("base64"));
+  res.setHeader("Profile-Title", Buffer.from(`Meridian ${data.user.email}`).toString("base64"));
   res.send(Buffer.from(body).toString("base64"));
 });
-
-void config;

@@ -1,5 +1,4 @@
-export const PANEL_VERSION = "2.3.0";
-export const GITHUB_URL = "https://github.com/icubaby/SideRail";
-export const GITHUB_REPO = "icubaby/SideRail";
-export const TELEGRAM_URL = "https://t.me/xdicubaby";
-export const AUTHOR = "icubaby";
+export const PANEL_NAME = "Meridian";
+export const PANEL_VERSION = "2.4.0";
+export const GITHUB_URL = "https://github.com/cakorotc/Miamy-kyd";
+export const GITHUB_REPO = "cakorotc/Miamy-kyd";
