@@ -1,12 +1,7 @@
 /**
- * SideRail - Xray-core VPN management panel
- * Copyright (c) 2025 icubaby. All rights reserved.
- * Official repository: https://github.com/icubaby/SideRail
- *
- * Licensed under the SideRail Proprietary License (see LICENSE).
- * Unauthorized selling, white-labeling, or removal of attribution,
- * branding, or the embedded authorship identifiers is prohibited.
- * Watermark: sr-icubaby-2025-9f4c1a7e
+ * Client configuration link builders (vless://, vmess://, trojan://).
+ * Link labels carry the inbound type only — VLESS-WS, Trojan-WS, etc. —
+ * never panel branding.
  */
 import { getSetting } from "./db.js";
 import type { Inbound, UserWithInbounds } from "./types.js";
@@ -19,7 +14,7 @@ interface LinkContext {
 }
 
 function label(inbound: Inbound): string {
-  return `icubaby/SideRail - ${inbound.tag}`;
+  return inbound.tag;
 }
 
 function commonQuery(ctx: LinkContext): Record<string, string> {

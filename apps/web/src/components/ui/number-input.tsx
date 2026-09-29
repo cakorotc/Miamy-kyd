@@ -30,7 +30,7 @@ export function NumberInput({
   return (
     <div
       className={cn(
-        "flex h-10 items-stretch overflow-hidden rounded-base border-2 border-border bg-bw",
+        "flex h-10 items-stretch overflow-hidden rounded-base border border-border bg-surface2/50",
         className,
       )}
     >
@@ -38,7 +38,7 @@ export function NumberInput({
         type="button"
         onClick={dec}
         disabled={value <= min}
-        className="grid w-10 shrink-0 place-items-center border-r-2 border-border transition-colors hover:bg-main disabled:opacity-40 disabled:hover:bg-transparent"
+        className="grid w-10 shrink-0 place-items-center border-e border-border text-muted transition-colors hover:bg-surface2 hover:text-text disabled:opacity-40 disabled:hover:bg-transparent"
       >
         <Minus className="h-4 w-4" />
       </button>
@@ -52,15 +52,15 @@ export function NumberInput({
             const n = Number(e.target.value.replace(/[^\d.]/g, ""));
             if (!Number.isNaN(n)) onChange(clamp(n));
           }}
-          className="w-full min-w-0 bg-transparent text-center text-sm font-heading text-text outline-none"
+          className="w-full min-w-0 bg-transparent text-center text-sm font-semibold text-text outline-none"
         />
-        {suffix && <span className="shrink-0 text-xs font-base text-text/50">{suffix}</span>}
+        {suffix && <span className="shrink-0 text-xs font-base text-muted">{suffix}</span>}
       </div>
       <button
         type="button"
         onClick={inc}
         disabled={value >= max}
-        className="grid w-10 shrink-0 place-items-center border-l-2 border-border transition-colors hover:bg-main disabled:opacity-40 disabled:hover:bg-transparent"
+        className="grid w-10 shrink-0 place-items-center border-s border-border text-muted transition-colors hover:bg-surface2 hover:text-text disabled:opacity-40 disabled:hover:bg-transparent"
       >
         <Plus className="h-4 w-4" />
       </button>

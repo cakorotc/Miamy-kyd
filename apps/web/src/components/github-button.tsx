@@ -59,14 +59,14 @@ export function GitHubButton({
       target="_blank"
       rel="noreferrer"
       className={cn(
-        "inline-flex items-center gap-2 rounded-base border-2 border-border bg-bw px-3 py-1.5 text-sm font-heading transition-all hover:bg-main hover:text-mtext hover:neo-shadow",
+        "inline-flex items-center gap-2 rounded-base border border-border bg-surface px-3 py-1.5 text-sm font-semibold text-text transition-colors hover:border-main/40 hover:text-main",
         className,
       )}
     >
       <Github className="h-4 w-4" />
-      <span>{GITHUB_REPO}</span>
+      <span className="truncate">{GITHUB_REPO}</span>
       {showStars && stars !== null && (
-        <span className="flex items-center gap-1 rounded-[4px] border-2 border-border bg-main px-1.5 text-mtext">
+        <span className="flex items-center gap-1 rounded-full border border-main/30 bg-main/15 px-1.5 text-xs font-semibold text-main">
           <Star className="h-3 w-3" fill="currentColor" />
           {stars}
         </span>

@@ -15,6 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { PageHeader } from "@/components/layout/page-header";
 import type { BotConfig } from "@/lib/types";
 
 export default function BotPage() {
@@ -50,18 +51,13 @@ export default function BotPage() {
 
   const testMut = useMutation({
     mutationFn: () => api.testBot(token, cleanIds()),
-    onSuccess: () => toast.push("success", "Test message sent — check your Telegram"),
+    onSuccess: () => toast.push("success", t("testSent")),
     onError: (e: Error) => toast.push("error", e.message),
   });
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-3xl">{t("telegramBot")}</h1>
-        <p className="text-sm font-base text-text/60">
-          {t("botDesc")}
-        </p>
-      </div>
+      <PageHeader title={t("telegramBot")} sub={t("botDesc")} />
 
       <Card>
         <CardHeader>
@@ -69,15 +65,13 @@ export default function BotPage() {
             <Bot className="h-5 w-5 text-main" />
             <CardTitle>{t("botConfig")}</CardTitle>
           </div>
-          <CardDescription>
-            {t("botConfigDesc")}
-          </CardDescription>
+          <CardDescription>{t("botConfigDesc")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
-          <div className="flex items-center justify-between rounded-base border-2 border-border bg-bg/40 p-3">
+          <div className="flex items-center justify-between rounded-base border border-border bg-surface2/40 p-3">
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 text-main" />
-              <span className="font-heading text-sm">{t("enableBot")}</span>
+              <span className="font-semibold text-sm">{t("enableBot")}</span>
             </div>
             <Switch checked={enabled} onCheckedChange={setEnabled} />
           </div>
@@ -90,6 +84,7 @@ export default function BotPage() {
               onChange={(e) => setToken(e.target.value)}
               placeholder="123456789:AAExxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
               autoComplete="off"
+              dir="ltr"
             />
           </div>
 
@@ -103,7 +98,8 @@ export default function BotPage() {
                 className="h-7 px-2 text-xs"
                 onClick={() => setChatIds((p) => [...p, ""])}
               >
-                <Plus className="h-3.5 w-3.5" />{t("add")}
+                <Plus className="h-3.5 w-3.5" />
+                {t("add")}
               </Button>
             </div>
             <div className="space-y-2">
@@ -115,6 +111,7 @@ export default function BotPage() {
                       setChatIds((p) => p.map((v, idx) => (idx === i ? e.target.value : v)))
                     }
                     placeholder="e.g. 123456789"
+                    dir="ltr"
                   />
                   {chatIds.length > 1 && (
                     <Button
@@ -129,28 +126,21 @@ export default function BotPage() {
                 </div>
               ))}
             </div>
-            <p className="text-[11px] text-text/50">
-              {t("chatIdHint")}
-            </p>
+            <p className="text-[11px] text-muted/80">{t("chatIdHint")}</p>
           </div>
 
-          <div className="flex items-center justify-between rounded-base border-2 border-border bg-bg/40 p-3">
+          <div className="flex items-center justify-between rounded-base border border-border bg-surface2/40 p-3">
             <div>
-              <div className="font-heading text-sm">{t("dailyBackup")}</div>
-              <div className="text-[11px] text-text/50">
-                {t("dailyBackupDesc")}
-              </div>
+              <div className="font-semibold text-sm">{t("dailyBackup")}</div>
+              <div className="mt-0.5 text-[11px] text-muted/80">{t("dailyBackupDesc")}</div>
             </div>
             <Switch checked={dailyBackup} onCheckedChange={setDailyBackup} />
           </div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <Button
-              className="w-full"
-              onClick={() => saveMut.mutate()}
-              disabled={saveMut.isPending}
-            >
-              <Save className="h-4 w-4" />{t("save")}
+            <Button className="w-full" onClick={() => saveMut.mutate()} disabled={saveMut.isPending}>
+              <Save className="h-4 w-4" />
+              {t("save")}
             </Button>
             <Button
               variant="neutral"

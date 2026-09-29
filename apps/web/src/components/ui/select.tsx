@@ -14,14 +14,14 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-base border-2 border-border bg-bw px-3 py-2 text-sm font-base text-text ring-offset-bg placeholder:text-text/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      "flex h-10 w-full items-center justify-between gap-2 rounded-base border border-border bg-surface2/50 px-3 py-2 text-sm font-base text-text transition-colors focus:border-main/60 focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 [&>span]:text-start",
       className,
     )}
     {...props}
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <ChevronDown className="h-4 w-4 opacity-70" />
+      <ChevronDown className="h-4 w-4 shrink-0 text-muted" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
@@ -35,7 +35,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-base border-2 border-border bg-bw text-text neo-shadow data-[state=open]:animate-pop-in",
+        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-base border border-border bg-surface text-text shadow-pop data-[state=open]:animate-pop-in",
         position === "popper" &&
           "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
         className,
@@ -43,8 +43,8 @@ const SelectContent = React.forwardRef<
       position={position}
       {...props}
     >
-      <SelectPrimitive.ScrollUpButton className="flex items-center justify-center py-1">
-        <ChevronUp className="h-4 w-4" />
+      <SelectPrimitive.ScrollUpButton className="flex cursor-pointer items-center justify-center py-1">
+        <ChevronUp className="h-4 w-4 text-muted" />
       </SelectPrimitive.ScrollUpButton>
       <SelectPrimitive.Viewport
         className={cn(
@@ -54,8 +54,8 @@ const SelectContent = React.forwardRef<
       >
         {children}
       </SelectPrimitive.Viewport>
-      <SelectPrimitive.ScrollDownButton className="flex items-center justify-center py-1">
-        <ChevronDown className="h-4 w-4" />
+      <SelectPrimitive.ScrollDownButton className="flex cursor-pointer items-center justify-center py-1">
+        <ChevronDown className="h-4 w-4 text-muted" />
       </SelectPrimitive.ScrollDownButton>
     </SelectPrimitive.Content>
   </SelectPrimitive.Portal>
@@ -69,12 +69,12 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-pointer select-none items-center rounded-[4px] py-1.5 pl-8 pr-2 text-sm font-base outline-none focus:bg-main focus:text-mtext data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex w-full cursor-pointer select-none items-center rounded-[7px] py-1.5 pe-2 ps-8 text-sm font-base outline-none transition-colors focus:bg-surface2 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
     {...props}
   >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="absolute start-2 flex h-3.5 w-3.5 items-center justify-center text-main">
       <SelectPrimitive.ItemIndicator>
         <Check className="h-4 w-4" />
       </SelectPrimitive.ItemIndicator>
@@ -84,11 +84,4 @@ const SelectItem = React.forwardRef<
 ));
 SelectItem.displayName = SelectPrimitive.Item.displayName;
 
-export {
-  Select,
-  SelectGroup,
-  SelectValue,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-};
+export { Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectItem };

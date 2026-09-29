@@ -38,6 +38,13 @@ const fingerprints = ["chrome", "firefox", "safari", "ios", "android", "edge", "
 const alpnOptions = ["h2,http/1.1", "h2", "http/1.1"];
 const resets: TrafficReset[] = ["never", "daily", "weekly", "monthly"];
 
+const RESET_LABELS: Record<TrafficReset, "trafficResetNever" | "trafficResetDaily" | "trafficResetWeekly" | "trafficResetMonthly"> = {
+  never: "trafficResetNever",
+  daily: "trafficResetDaily",
+  weekly: "trafficResetWeekly",
+  monthly: "trafficResetMonthly",
+};
+
 function randomToken(len: number): string {
   const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let out = "";
@@ -63,7 +70,7 @@ function ConnectedIps({ userId }: { userId: number }) {
         </Badge>
       </div>
       {ips.length === 0 ? (
-        <p className="rounded-base border-2 border-dashed border-border/40 px-3 py-2 text-xs text-text/50">
+        <p className="rounded-base border border-dashed border-border/70 px-3 py-2 text-xs text-muted">
           {t("noConnections")}
         </p>
       ) : (
@@ -71,10 +78,14 @@ function ConnectedIps({ userId }: { userId: number }) {
           {ips.map((entry) => (
             <div
               key={entry.ip}
-              className="flex items-center justify-between gap-2 rounded-base border-2 border-border bg-bg/40 px-2.5 py-1.5"
+              className="flex items-center justify-between gap-2 rounded-base border border-border bg-surface2/40 px-2.5 py-1.5"
             >
-              <span className="truncate font-mono text-xs">{entry.ip}</span>
-              <span className="shrink-0 text-[10px] text-text/50">{relativeTime(entry.last_seen)}</span>
+              <span className="truncate font-mono text-xs" dir="ltr">
+                {entry.ip}
+              </span>
+              <span className="shrink-0 text-[10px] text-muted">
+                {relativeTime(entry.last_seen)}
+              </span>
             </div>
           ))}
         </div>
@@ -190,7 +201,7 @@ export function UserFormDialog({
               value={email}
               onChange={(e) => setEmail(e.target.value.slice(0, 32))}
               maxLength={32}
-              placeholder="icubaby/SideRail"
+              placeholder={t("namePlaceholder")}
               autoFocus
             />
           </div>
@@ -199,12 +210,12 @@ export function UserFormDialog({
             <div className="space-y-2">
               <Label>{t("dataLimit")}</Label>
               <NumberInput value={dataLimit} onChange={setDataLimit} step={1} suffix="GB" />
-              <p className="text-[11px] text-text/50">{t("unlimitedHint")}</p>
+              <p className="text-[11px] text-muted/80">{t("unlimitedHint")}</p>
             </div>
             <div className="space-y-2">
               <Label>{t("expireIn")}</Label>
               <NumberInput value={expireDays} onChange={setExpireDays} step={1} suffix={t("days")} />
-              <p className="text-[11px] text-text/50">{t("neverHint")}</p>
+              <p className="text-[11px] text-muted/80">{t("neverHint")}</p>
             </div>
           </div>
 
@@ -242,14 +253,14 @@ export function UserFormDialog({
                     type="button"
                     onClick={() => toggleInbound(ib.id)}
                     className={cn(
-                      "flex min-w-[calc(50%-0.375rem)] flex-1 flex-col gap-0.5 rounded-base border-2 border-border px-2.5 py-1.5 text-left transition-all sm:min-w-[calc(33.333%-0.5rem)]",
+                      "flex min-w-[calc(50%-0.375rem)] flex-1 flex-col gap-0.5 rounded-base border px-2.5 py-1.5 text-start transition-colors sm:min-w-[calc(33.333%-0.5rem)]",
                       active
-                        ? "bg-main text-mtext neo-shadow"
-                        : "bg-bw text-text hover:bg-main/10",
+                        ? "border-main/40 bg-main/15 text-main"
+                        : "border-border bg-surface2/40 text-text hover:bg-surface2/70",
                       !ib.enabled && "opacity-50",
                     )}
                   >
-                    <span className="truncate font-heading text-xs">{ib.tag}</span>
+                    <span className="truncate text-xs font-semibold">{ib.tag}</span>
                     <span className="text-[9px] uppercase tracking-wide opacity-70">
                       {ib.protocol}/{ib.transport}
                     </span>
@@ -258,7 +269,7 @@ export function UserFormDialog({
               })}
             </div>
             {allSelected && (
-              <p className="text-[11px] text-text/50">{t("allInboundsAttached")}</p>
+              <p className="text-[11px] text-muted/80">{t("allInboundsAttached")}</p>
             )}
           </div>
 
@@ -268,29 +279,38 @@ export function UserFormDialog({
             type="button"
             onClick={() => setShowAdvanced((v) => !v)}
             className={cn(
-              "flex w-full items-center justify-between rounded-base border-2 border-border px-4 py-3 font-heading text-sm transition-all",
-              showAdvanced ? "bg-main text-mtext neo-shadow" : "bg-bw hover:bg-main/10",
+              "flex w-full items-center justify-between rounded-base border px-4 py-3 font-semibold text-sm transition-colors",
+              showAdvanced
+                ? "border-main/40 bg-main/15 text-main"
+                : "border-border bg-surface2/40 text-text hover:bg-surface2/70",
             )}
           >
             <span className="flex items-center gap-2">
-              <Settings2 className="h-4 w-4" />{t("advancedOptions")}</span>
+              <Settings2 className="h-4 w-4" />
+              {t("advancedOptions")}
+            </span>
             <ChevronDown
               className={cn("h-4 w-4 transition-transform", showAdvanced && "rotate-180")}
             />
           </button>
 
           {showAdvanced && (
-            <div className="space-y-4 rounded-base border-2 border-border/40 bg-bg/30 p-4 animate-fade-in">
+            <div className="space-y-4 rounded-base border border-border/70 bg-surface2/30 p-4 animate-fade-in">
               <div className="space-y-2">
-                <Label htmlFor="uuid">UUID</Label>
+                <Label htmlFor="uuid">{t("uuid")}</Label>
                 <div className="flex gap-2">
-                  <Input id="uuid" value={uuid} onChange={(e) => setUuid(e.target.value)} />
+                  <Input
+                    id="uuid"
+                    value={uuid}
+                    onChange={(e) => setUuid(e.target.value)}
+                    dir="ltr"
+                  />
                   <Button
                     type="button"
                     variant="neutral"
                     size="icon"
                     onClick={() => setUuid(crypto.randomUUID())}
-                    title="Generate UUID"
+                    title={t("generateUuid")}
                   >
                     <Dice5 className="h-4 w-4" />
                   </Button>
@@ -304,13 +324,14 @@ export function UserFormDialog({
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    dir="ltr"
                   />
                   <Button
                     type="button"
                     variant="neutral"
                     size="icon"
                     onClick={() => setPassword(randomToken(16))}
-                    title="Generate password"
+                    title={t("generatePassword")}
                   >
                     <KeyRound className="h-4 w-4" />
                   </Button>
@@ -351,10 +372,10 @@ export function UserFormDialog({
                 <div className="space-y-2">
                   <Label>{t("ipLimit")}</Label>
                   <NumberInput value={ipLimit} onChange={setIpLimit} step={1} />
-                  <p className="text-[11px] text-text/50">{t("ipLimitHint")}</p>
+                  <p className="text-[11px] text-muted/80">{t("ipLimitHint")}</p>
                 </div>
                 <div className="space-y-2">
-                  <Label>Traffic reset</Label>
+                  <Label>{t("trafficResetLabel")}</Label>
                   <Select
                     value={trafficReset}
                     onValueChange={(v) => setTrafficReset(v as TrafficReset)}
@@ -365,7 +386,7 @@ export function UserFormDialog({
                     <SelectContent>
                       {resets.map((r) => (
                         <SelectItem key={r} value={r}>
-                          {r}
+                          {t(RESET_LABELS[r])}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -373,19 +394,18 @@ export function UserFormDialog({
                 </div>
                 <div className="space-y-2 sm:col-span-2">
                   <Label htmlFor="comment">{t("comment")}</Label>
-                  <Input id="comment" value={comment} onChange={(e) => setComment(e.target.value)} />
+                  <Input
+                    id="comment"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                  />
                 </div>
               </div>
             </div>
           )}
 
           <DialogFooter className="grid grid-cols-2 gap-2">
-            <Button
-              type="button"
-              variant="neutral"
-              onClick={() => onOpenChange(false)}
-              className="w-full"
-            >
+            <Button type="button" variant="neutral" onClick={() => onOpenChange(false)} className="w-full">
               {t("cancel")}
             </Button>
             <Button type="submit" disabled={saving} className="w-full">

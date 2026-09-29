@@ -9,7 +9,7 @@ export function VersionBadge({ className }: { className?: string }) {
       target="_blank"
       rel="noreferrer"
       className={cn(
-        "inline-flex items-center gap-2 rounded-base border-2 border-border bg-bw px-3 py-1.5 text-sm font-heading transition-all hover:bg-main hover:text-mtext hover:neo-shadow",
+        "inline-flex items-center gap-2 rounded-base border border-border bg-surface px-3 py-1.5 text-sm font-semibold text-text transition-colors hover:border-main/40 hover:text-main",
         className,
       )}
     >

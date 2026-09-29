@@ -24,13 +24,13 @@ import {
   WifiOff,
 } from "lucide-react";
 import { QrCode } from "@/components/qr-code";
-import { RailLogo } from "@/components/rail-logo";
+import { MeridianLogo } from "@/components/meridian-logo";
 import { AnimatedBackground } from "@/components/animated-background";
 import { useGitHubStars } from "@/components/github-button";
-import { useToast } from "@/components/ui/toast";
-import { useI18n, LANGUAGES, type Lang } from "@/lib/i18n";
-import { GITHUB_URL, GITHUB_REPO, TELEGRAM_URL, PANEL_VERSION } from "@/lib/brand";
-import { Github, Star, Tag, Send, Languages } from "lucide-react";
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
+import { useI18n } from "@/lib/i18n";
+import { GITHUB_URL, GITHUB_REPO, PANEL_VERSION } from "@/lib/brand";
+import { Github, Star, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -45,9 +45,9 @@ import { formatBytes, formatDate, relativeTime, cn } from "@/lib/utils";
 import type { SubData, SubLink } from "@/lib/types";
 
 const protocolColor: Record<string, string> = {
-  vless: "#a3e635",
-  vmess: "#7dd3fc",
-  trojan: "#f0abfc",
+  vless: "border-main/30 bg-main/10 text-main",
+  vmess: "border-info/30 bg-info/10 text-info",
+  trojan: "border-success/30 bg-success/10 text-success",
 };
 
 function useSubData(token: string | undefined) {
@@ -75,6 +75,7 @@ function CopyButton({
   icon?: boolean;
   className?: string;
 }) {
+  const { t } = useI18n();
   const [copied, setCopied] = React.useState(false);
   const copy = () => {
     void navigator.clipboard.writeText(value);
@@ -83,7 +84,12 @@ function CopyButton({
   };
   if (icon) {
     return (
-      <Button variant="neutral" size="icon" onClick={copy} className={cn("h-9 w-9 shrink-0", className)}>
+      <Button
+        variant="neutral"
+        size="icon"
+        onClick={copy}
+        className={cn("h-9 w-9 shrink-0", className)}
+      >
         {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
       </Button>
     );
@@ -91,7 +97,7 @@ function CopyButton({
   return (
     <Button variant="neutral" onClick={copy} className={cn("shrink-0", className)}>
       {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-      {label || (copied ? "Copied" : "Copy")}
+      {label || (copied ? t("copied") : t("copyShort"))}
     </Button>
   );
 }
@@ -117,26 +123,19 @@ export default function SubscriptionPage() {
     return (
       <div className="grid min-h-screen place-items-center bg-bg">
         <div className="flex flex-col items-center gap-3">
-          <RailLogo className="h-10 w-10 animate-pulse text-main" />
-          <p className="font-heading text-text/60">{t("loadingSub")}</p>
+          <MeridianLogo className="h-10 w-10 animate-pulse text-main" />
+          <p className="font-semibold text-muted">{t("loadingSub")}</p>
         </div>
       </div>
     );
   }
 
   if (isError || !data) {
-    return (
-      <ErrorState title={t("subNotFound")} desc={t("subNotFoundDesc")} />
-    );
+    return <ErrorState title={t("subNotFound")} desc={t("subNotFoundDesc")} />;
   }
 
   if ("expired" in data && data.expired) {
-    return (
-      <ErrorState
-        title={t("subExpired")}
-        desc={t("subExpiredDesc")}
-      />
-    );
+    return <ErrorState title={t("subExpired")} desc={t("subExpiredDesc")} />;
   }
 
   const sub = data as SubData;
@@ -152,12 +151,12 @@ export default function SubscriptionPage() {
       <div className="relative mx-auto w-full min-w-0 max-w-3xl px-4 pt-6 sm:pt-10">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
-            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-base border-2 border-border bg-main text-mtext neo-shadow">
-              <RailLogo className="h-7 w-7" />
+            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-card border border-main/40 bg-main/10 text-main shadow-glow">
+              <MeridianLogo className="h-7 w-7" />
             </div>
             <div className="min-w-0">
-              <div className="font-heading text-2xl leading-tight">SideRail</div>
-              <div className="truncate text-sm font-base text-text/60">{user.email}</div>
+              <div className="font-heading text-2xl leading-tight">Meridian</div>
+              <div className="truncate text-sm font-base text-muted">{user.email}</div>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -185,7 +184,9 @@ export default function SubscriptionPage() {
           <CardContent className="space-y-5 p-5 sm:p-6">
             <div>
               <div className="flex items-baseline justify-between gap-2">
-                <span className="text-xs font-heading uppercase tracking-widest text-text/60">{t("dataUsed")}</span>
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted">
+                  {t("dataUsed")}
+                </span>
                 <span className="font-heading text-sm">
                   {user.dataLimit > 0
                     ? `${formatBytes(user.total)} / ${formatBytes(user.dataLimit)}`
@@ -194,59 +195,53 @@ export default function SubscriptionPage() {
               </div>
               <Progress
                 value={user.dataLimit > 0 ? usagePct : 100}
-                className="mt-2 h-4"
+                className="mt-2 h-3"
                 indicatorClassName={
-                  usagePct > 90 ? "bg-red-400" : usagePct > 70 ? "bg-yellow-400" : "bg-main"
+                  usagePct > 90 ? "bg-danger" : usagePct > 70 ? "bg-warning" : "bg-main"
                 }
               />
-              <div className="mt-1 text-xs font-base text-text/50">
-                {user.dataLimit > 0 ? `${formatBytes(remaining)} ${t("remainingLabel")}` : t("unlimitedPlan")}
+              <div className="mt-1 text-xs font-base text-muted">
+                {user.dataLimit > 0
+                  ? `${formatBytes(remaining)} ${t("remainingLabel")}`
+                  : t("unlimitedPlan")}
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <MiniStat
-                icon={Download}
-                label={t("download")}
-                value={formatBytes(user.down)}
-                accent="#a3e635"
-              />
-              <MiniStat
-                icon={Upload}
-                label={t("upload")}
-                value={formatBytes(user.up)}
-                accent="#7dd3fc"
-              />
+              <MiniStat icon={Download} label={t("download")} value={formatBytes(user.down)} accent="border-success/30 bg-success/10 text-success" />
+              <MiniStat icon={Upload} label={t("upload")} value={formatBytes(user.up)} accent="border-info/30 bg-info/10 text-info" />
               <MiniStat
                 icon={CalendarClock}
                 label={t("expires")}
                 value={user.expireAt ? relativeTime(user.expireAt) : t("never")}
-                accent="#fda4af"
+                accent="border-danger/30 bg-danger/10 text-danger"
               />
               <MiniStat
                 icon={Gauge}
                 label={t("configs")}
                 value={String(links.length)}
-                accent="#f0abfc"
+                accent="border-main/30 bg-main/10 text-main"
               />
             </div>
 
             <div>
-              <span className="mb-2 block text-xs font-heading uppercase tracking-widest text-text/60">{t("usageTrend")}</span>
-              <div className="h-[160px] w-full rounded-base border-2 border-border bg-bg/40 p-2">
+              <span className="mb-2 block text-xs font-semibold uppercase tracking-wider text-muted">
+                {t("usageTrend")}
+              </span>
+              <div className="h-[160px] w-full rounded-base border border-border bg-surface2/30 p-2">
                 {chart.length >= 2 ? (
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={chart} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
                       <defs>
                         <linearGradient id="usageFill" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#a3e635" stopOpacity={0.8} />
-                          <stop offset="100%" stopColor="#a3e635" stopOpacity={0.05} />
+                          <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.5} />
+                          <stop offset="100%" stopColor="#38bdf8" stopOpacity={0.03} />
                         </linearGradient>
                       </defs>
                       <XAxis dataKey="ts" hide />
                       <YAxis hide />
                       <RTooltip
-                        formatter={(v: number) => [formatBytes(v), "Total"]}
+                        formatter={(v: number) => [formatBytes(v), t("total")]}
                         labelFormatter={(l: number) =>
                           new Date(l).toLocaleTimeString(undefined, {
                             hour: "2-digit",
@@ -254,30 +249,31 @@ export default function SubscriptionPage() {
                           })
                         }
                         contentStyle={{
-                          border: "2px solid #000",
-                          borderRadius: 8,
-                          background: "#fff",
-                          color: "#000",
+                          border: "1px solid #223052",
+                          borderRadius: 10,
+                          background: "#10172a",
+                          color: "#e7edf8",
+                          fontSize: 12,
                           fontWeight: 600,
                         }}
                       />
                       <Area
                         type="monotone"
                         dataKey="used"
-                        stroke="#000"
+                        stroke="#38bdf8"
                         strokeWidth={2}
                         fill="url(#usageFill)"
                       />
                     </AreaChart>
                   </ResponsiveContainer>
                 ) : (
-                  <div className="flex h-full items-center justify-center text-center text-xs font-base text-text/40">
+                  <div className="flex h-full items-center justify-center text-center text-xs font-base text-muted/70">
                     {t("notEnoughData")}
                   </div>
                 )}
               </div>
               {user.expireAt && (
-                <div className="mt-2 text-center text-xs font-base text-text/50">
+                <div className="mt-2 text-center text-xs font-base text-muted">
                   {t("validUntil")} {formatDate(user.expireAt)}
                 </div>
               )}
@@ -286,9 +282,11 @@ export default function SubscriptionPage() {
         </Card>
 
         <div className="mt-4 space-y-2">
-          <div className="flex min-w-0 items-center gap-2 rounded-base border-2 border-border bg-bw px-3 py-2 neo-shadow">
-            <Link2 className="h-4 w-4 shrink-0 text-text/50" />
-            <span className="truncate font-mono text-xs text-text/80">{subUrl}</span>
+          <div className="flex min-w-0 items-center gap-2 rounded-base border border-border bg-surface px-3 py-2">
+            <Link2 className="h-4 w-4 shrink-0 text-muted" />
+            <span className="truncate font-mono text-xs text-muted" dir="ltr">
+              {subUrl}
+            </span>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <CopyButton value={subUrl} label={t("copySub")} className="w-full" />
@@ -302,7 +300,7 @@ export default function SubscriptionPage() {
             <CopyButton value={`${subUrl}/clash`} label="Clash" className="w-full" />
             <CopyButton value={`${subUrl}/singbox`} label="Sing-box" className="w-full" />
           </div>
-          <p className="text-center text-[11px] font-base text-text/40">{t("copyHint")}</p>
+          <p className="text-center text-[11px] font-base text-muted/70">{t("copyHint")}</p>
         </div>
 
         <div className="mt-8">
@@ -316,13 +314,14 @@ export default function SubscriptionPage() {
               >
                 <CardContent className="flex items-center gap-2.5 p-3 sm:gap-3 sm:p-4">
                   <div
-                    className="grid h-10 w-10 shrink-0 place-items-center rounded-base border-2 border-border font-heading text-black uppercase sm:h-11 sm:w-11"
-                    style={{ background: protocolColor[link.protocol] || "#a3e635" }}
+                    className={`grid h-10 w-10 shrink-0 place-items-center rounded-base border font-heading uppercase sm:h-11 sm:w-11 ${
+                      protocolColor[link.protocol] || protocolColor.vless
+                    }`}
                   >
                     {link.protocol.slice(0, 2)}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="truncate font-heading text-sm sm:text-base">{link.tag}</div>
+                    <div className="truncate text-sm font-semibold sm:text-base">{link.tag}</div>
                     <Badge variant="neutral" className="mt-0.5 text-[10px] uppercase">
                       {link.transport}
                     </Badge>
@@ -343,9 +342,7 @@ export default function SubscriptionPage() {
             ))}
             {links.length === 0 && (
               <Card>
-                <CardContent className="py-10 text-center text-text/50">
-                  {t("noConfigs")}
-                </CardContent>
+                <CardContent className="py-10 text-center text-muted">{t("noConfigs")}</CardContent>
               </Card>
             )}
           </div>
@@ -363,7 +360,7 @@ export default function SubscriptionPage() {
           </DialogHeader>
           <div className="flex flex-col items-center gap-4">
             {qrConfig && <QrCode value={qrConfig.link} size={220} />}
-            <p className="break-all text-center font-mono text-[11px] text-text/50">
+            <p className="break-all text-center font-mono text-[11px] text-muted" dir="ltr">
               {qrConfig?.link}
             </p>
             {qrConfig && <CopyButton value={qrConfig.link} label={t("copyConfig")} />}
@@ -378,9 +375,7 @@ export default function SubscriptionPage() {
           </DialogHeader>
           <div className="flex flex-col items-center gap-4">
             <QrCode value={subUrl} size={220} />
-            <p className="text-center text-sm font-base text-text/60">
-              {t("scanImport")}
-            </p>
+            <p className="text-center text-sm font-base text-muted">{t("scanImport")}</p>
             <CopyButton value={subUrl} label={t("copySub")} />
           </div>
         </DialogContent>
@@ -401,14 +396,11 @@ function MiniStat({
   accent: string;
 }) {
   return (
-    <div className="flex flex-col items-center gap-1.5 rounded-base border-2 border-border bg-bg/40 p-3 text-center">
-      <div
-        className="grid h-8 w-8 shrink-0 place-items-center rounded-[5px] border-2 border-border"
-        style={{ background: accent }}
-      >
-        <Icon className="h-4 w-4 text-black" />
+    <div className="flex flex-col items-center gap-1.5 rounded-base border border-border bg-surface2/30 p-3 text-center">
+      <div className={cn("grid h-8 w-8 shrink-0 place-items-center rounded-base border", accent)}>
+        <Icon className="h-4 w-4" />
       </div>
-      <span className="text-[10px] font-heading uppercase tracking-widest text-text/60">
+      <span className="text-[10px] font-semibold uppercase tracking-wider text-muted">
         {label}
       </span>
       <div className="w-full truncate font-heading text-sm">{value}</div>
@@ -417,15 +409,7 @@ function MiniStat({
 }
 
 function SubFooter() {
-  const { lang, setLang, t } = useI18n();
-  const toast = useToast();
   const stars = useGitHubStars();
-
-  const changeLang = (l: Lang) => {
-    if (l === lang) return;
-    setLang(l);
-    toast.push("success", t("languageChanged"));
-  };
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-2">
@@ -434,52 +418,28 @@ function SubFooter() {
           href={GITHUB_URL}
           target="_blank"
           rel="noreferrer"
-          className="flex items-center justify-between gap-2 rounded-base border-2 border-border bg-bw/70 px-3 py-2 font-heading text-xs text-text/80 backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-main hover:text-mtext hover:neo-shadow"
+          className="flex items-center justify-between gap-2 rounded-base border border-border bg-surface/80 px-3 py-2 text-xs font-semibold text-muted backdrop-blur transition-colors hover:border-main/40 hover:text-main"
         >
           <span className="flex min-w-0 items-center gap-1.5">
             <Github className="h-4 w-4 shrink-0" />
             <span className="truncate">{GITHUB_REPO}</span>
           </span>
-          <span className="flex shrink-0 items-center gap-1 rounded-[4px] border-2 border-border bg-main px-1.5 text-mtext">
+          <span className="flex shrink-0 items-center gap-1 rounded-full border border-main/30 bg-main/15 px-1.5 text-main">
             <Star className="h-3 w-3" fill="currentColor" />
             {stars ?? 0}
           </span>
         </a>
         <a
-          href={TELEGRAM_URL}
-          target="_blank"
-          rel="noreferrer"
-          className="flex items-center justify-center gap-1.5 rounded-base border-2 border-border bg-bw/70 px-3 py-2 font-heading text-xs text-text/80 backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-main hover:text-mtext hover:neo-shadow"
-        >
-          <Send className="h-4 w-4 shrink-0" />
-          <span className="truncate">Telegram</span>
-        </a>
-        <a
           href={`${GITHUB_URL}/releases`}
           target="_blank"
           rel="noreferrer"
-          className="col-span-2 flex items-center justify-center gap-1.5 rounded-base border-2 border-border bg-bw/70 px-3 py-2 font-heading text-xs text-text/80 backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-main hover:text-mtext hover:neo-shadow"
+          className="col-span-2 flex items-center justify-center gap-1.5 rounded-base border border-border bg-surface/80 px-3 py-2 text-xs font-semibold text-muted backdrop-blur transition-colors hover:border-main/40 hover:text-main"
         >
           <Tag className="h-4 w-4 shrink-0" />
           <span className="truncate">v{PANEL_VERSION}</span>
         </a>
       </div>
-      <div className="flex items-center gap-1 rounded-base border-2 border-border bg-bw/70 p-1 backdrop-blur">
-        <Languages className="ml-1 h-4 w-4 shrink-0 text-text/50" />
-        {LANGUAGES.map((l) => (
-          <button
-            key={l.code}
-            type="button"
-            onClick={() => changeLang(l.code)}
-            className={cn(
-              "flex-1 rounded-[4px] px-1 py-1.5 text-xs font-heading transition-colors",
-              lang === l.code ? "bg-main text-mtext" : "hover:bg-main/15",
-            )}
-          >
-            {l.label}
-          </button>
-        ))}
-      </div>
+      <LanguageSwitcher className="w-full justify-between [&>button]:flex-1" />
     </div>
   );
 }
@@ -489,12 +449,12 @@ function ErrorState({ title, desc }: { title: string; desc: string }) {
     <div className={cn("grid min-h-screen place-items-center bg-bg p-4")}>
       <Card className="w-full max-w-md animate-pop-in">
         <CardContent className="flex flex-col items-center gap-4 py-10 text-center">
-          <div className="grid h-16 w-16 place-items-center rounded-base border-2 border-border bg-red-300">
-            <CircleAlert className="h-8 w-8 text-black" />
+          <div className="grid h-16 w-16 place-items-center rounded-card border border-danger/30 bg-danger/10 text-danger">
+            <CircleAlert className="h-8 w-8" />
           </div>
           <div>
             <h1 className="font-heading text-2xl">{title}</h1>
-            <p className="mt-1 text-sm font-base text-text/60">{desc}</p>
+            <p className="mt-1 text-sm font-base text-muted">{desc}</p>
           </div>
         </CardContent>
       </Card>

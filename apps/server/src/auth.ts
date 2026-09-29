@@ -1,12 +1,6 @@
 /**
- * SideRail - Xray-core VPN management panel
- * Copyright (c) 2025 icubaby. All rights reserved.
- * Official repository: https://github.com/icubaby/SideRail
- *
- * Licensed under the SideRail Proprietary License (see LICENSE).
- * Unauthorized selling, white-labeling, or removal of attribution,
- * branding, or the embedded authorship identifiers is prohibited.
- * Watermark: sr-icubaby-2025-9f4c1a7e
+ * Meridian — Xray-core VPN management panel.
+ * Authentication, sessions, and admin permissions.
  */
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -201,7 +195,7 @@ export function signToken(admin: { id: number }): string {
 }
 
 export function authGuard(req: AuthedRequest, res: Response, next: NextFunction): void {
-  const token = req.cookies?.sr_token || req.headers.authorization?.replace("Bearer ", "");
+  const token = req.cookies?.mrd_token || req.headers.authorization?.replace("Bearer ", "");
   if (!token) {
     res.status(401).json({ error: "unauthorized" });
     return;

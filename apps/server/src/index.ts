@@ -1,13 +1,3 @@
-/**
- * SideRail - Xray-core VPN management panel
- * Copyright (c) 2025 icubaby. All rights reserved.
- * Official repository: https://github.com/icubaby/SideRail
- *
- * Licensed under the SideRail Proprietary License (see LICENSE).
- * Unauthorized selling, white-labeling, or removal of attribution,
- * branding, or the embedded authorship identifiers is prohibited.
- * Watermark: sr-icubaby-2025-9f4c1a7e
- */
 import "dotenv/config";
 import http from "node:http";
 import path from "node:path";
@@ -27,9 +17,7 @@ import { applyTrafficReset } from "./users.js";
 import { rateLimit } from "./ratelimit.js";
 import { sendDailyBackup } from "./bot.js";
 import { refreshIpInfo } from "./ipinfo.js";
-import { SIDERAIL_SIGNATURE, watermark } from "./brand.js";
-
-console.log(SIDERAIL_SIGNATURE);
+import { PANEL_NAME } from "./brand.js";
 
 migrate();
 seedInbounds();
@@ -39,16 +27,14 @@ seedDefaultRouting();
 const app = express();
 app.disable("x-powered-by");
 app.use((_req, res, next) => {
-  res.setHeader("X-Powered-By", "SideRail by icubaby");
-  res.setHeader("X-SideRail-Author", "icubaby");
-  res.setHeader("X-SideRail-Repo", "https://github.com/icubaby/SideRail");
+  res.setHeader("X-Powered-By", PANEL_NAME);
   next();
 });
 app.use(express.json({ limit: "25mb" }));
 app.use(cookieParser());
 
 app.set("trust proxy", true);
-app.get("/healthz", (_req, res) => res.json({ ok: true, ...watermark() }));
+app.get("/healthz", (_req, res) => res.json({ ok: true }));
 
 app.use("/api", rateLimit, api);
 app.use("/sub", sub);
@@ -80,7 +66,7 @@ const server = http.createServer((req, res) => {
 attachTunnel(server);
 
 server.listen(config.port, config.host, async () => {
-  console.log(`SideRail listening on http://${config.host}:${config.port}`);
+  console.log(`${PANEL_NAME} listening on http://${config.host}:${config.port}`);
   await startXray();
   void refreshIpInfo();
 });

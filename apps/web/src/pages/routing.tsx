@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { PageHeader } from "@/components/layout/page-header";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
 import type { Inbound, RoutingRule, RoutingPreset } from "@/lib/types";
@@ -69,9 +70,9 @@ export default function RoutingPage() {
       (presets?.domains ?? []).map((p) => ({
         value: p.values[0],
         label: p.label,
-        group: "Presets",
+        group: t("presets"),
       })),
-    [presets],
+    [presets, t],
   );
 
   const submit = (e: React.FormEvent) => {
@@ -97,10 +98,7 @@ export default function RoutingPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-3xl">{t("routing")}</h1>
-        <p className="text-sm font-base text-text/60">{t("routingDesc")}</p>
-      </div>
+      <PageHeader title={t("routing")} sub={t("routingDesc")} />
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-start">
         <Card>
@@ -123,11 +121,11 @@ export default function RoutingPage() {
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className="text-sm font-heading text-text/70">{t("applyToInbounds")}</div>
+                  <div className="text-sm font-semibold text-muted">{t("applyToInbounds")}</div>
                   <button
                     type="button"
                     onClick={selectAll}
-                    className="text-xs font-heading text-text/60 underline-offset-2 hover:underline"
+                    className="text-xs font-semibold text-main underline-offset-2 hover:underline"
                   >
                     {selected.length === inbounds.length ? t("clearAll") : t("selectAll")}
                   </button>
@@ -141,8 +139,10 @@ export default function RoutingPage() {
                         type="button"
                         onClick={() => toggle(ib.id)}
                         className={cn(
-                          "min-w-[calc(50%-0.25rem)] flex-1 rounded-base border-2 border-border px-3 py-2 text-center text-xs font-heading transition-all sm:min-w-[calc(33.333%-0.5rem)]",
-                          active ? "bg-main text-mtext neo-shadow" : "bg-bw hover:bg-main/10",
+                          "min-w-[calc(50%-0.25rem)] flex-1 rounded-base border px-3 py-2 text-center text-xs font-semibold transition-colors sm:min-w-[calc(33.333%-0.5rem)]",
+                          active
+                            ? "border-main/40 bg-main/15 text-main"
+                            : "border-border bg-surface2/40 text-muted hover:text-text",
                         )}
                       >
                         {ib.tag}
@@ -153,7 +153,8 @@ export default function RoutingPage() {
               </div>
 
               <Button type="submit" className="w-full" disabled={addMut.isPending}>
-                <Plus className="h-4 w-4" />{t("addBlockRule")}
+                <Plus className="h-4 w-4" />
+                {t("addBlockRule")}
               </Button>
             </form>
           </CardContent>
@@ -165,25 +166,29 @@ export default function RoutingPage() {
               <Ban className="h-5 w-5 text-main" />
               <CardTitle>{t("blockedDomains")}</CardTitle>
             </div>
-            <CardDescription>{rules.length} {t("activeRules")}</CardDescription>
+            <CardDescription>
+              {rules.length} {t("activeRules")}
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             {rules.length === 0 && (
-              <div className="rounded-base border-2 border-dashed border-border/40 py-10 text-center text-sm text-text/50">
+              <div className="rounded-base border border-dashed border-border/70 py-10 text-center text-sm text-muted">
                 {t("noBlockRules")}
               </div>
             )}
             {rules.map((r) => (
               <div
                 key={r.id}
-                className="rounded-base border-2 border-border bg-bg/40 p-3"
+                className="rounded-base border border-border bg-surface2/40 p-3"
               >
                 <div className="flex items-center gap-3">
-                  <div className="grid h-9 w-9 shrink-0 place-items-center rounded-base border-2 border-border bg-red-300">
-                    <Globe className="h-4 w-4 text-black" />
+                  <div className="grid h-9 w-9 shrink-0 place-items-center rounded-base border border-danger/30 bg-danger/10 text-danger">
+                    <Globe className="h-4 w-4" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="truncate font-heading">{r.label || r.domain}</div>
+                    <div className="truncate font-semibold" dir="ltr">
+                      {r.label || r.domain}
+                    </div>
                   </div>
                   <Button
                     variant="danger"

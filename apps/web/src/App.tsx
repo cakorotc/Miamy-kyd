@@ -1,18 +1,12 @@
 /**
- * SideRail - Xray-core VPN management panel
- * Copyright (c) 2025 icubaby. All rights reserved.
- * Official repository: https://github.com/icubaby/SideRail
- *
- * Licensed under the SideRail Proprietary License (see LICENSE).
- * Unauthorized selling, white-labeling, or removal of attribution,
- * branding, or the embedded authorship identifiers is prohibited.
- * Watermark: sr-icubaby-2025-9f4c1a7e
+ * Meridian — Xray-core VPN management panel.
+ * Route table: public (setup, login, subscription) and protected
+ * admin routes gated by per-page permissions.
  */
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "./lib/auth";
 import { AppLayout } from "./components/layout/app-layout";
-import { Spinner } from "./components/spinner";
-import { RailLogo } from "./components/rail-logo";
+import { FullscreenLoader } from "./components/layout/auth-layout";
 import SetupPage from "./pages/setup";
 import LoginPage from "./pages/login";
 import DashboardPage from "./pages/dashboard";
@@ -48,23 +42,6 @@ function RequirePerm({ perm, children }: { perm: string; children: React.ReactNo
   if (can(perm as never)) return <>{children}</>;
   const first = admin?.permissions[0];
   return <Navigate to={first ? PERM_ROUTE[first] : "/login"} replace />;
-}
-
-function FullscreenLoader() {
-  return (
-    <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
-      <div className="grid h-16 w-16 animate-[pop-in_0.4s_ease-out] place-items-center rounded-base border-2 border-border bg-main text-mtext neo-shadow animate-float">
-        <RailLogo className="h-9 w-9" />
-      </div>
-      <div className="text-center">
-        <div className="font-heading text-2xl tracking-tight">SideRail</div>
-        <div className="mt-1 flex items-center justify-center gap-2 text-sm text-text/60">
-          <Spinner className="h-4 w-4" />
-          Loading…
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export default function App() {

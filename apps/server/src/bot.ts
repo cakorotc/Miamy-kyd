@@ -1,6 +1,11 @@
+/**
+ * Telegram bot integration: notification broadcasts, connectivity test,
+ * and the optional daily backup document.
+ */
 import https from "node:https";
 import { getSetting, setSetting } from "./db.js";
 import { exportData } from "./backup.js";
+import { PANEL_REPO } from "./brand.js";
 
 interface TgResult {
   ok: boolean;
@@ -51,7 +56,7 @@ function sendDocument(
   caption: string,
 ): Promise<TgResult> {
   return new Promise((resolve) => {
-    const boundary = `----SideRail${Date.now()}`;
+    const boundary = `----meridian${Date.now()}`;
     const parts: Buffer[] = [];
     const push = (s: string) => parts.push(Buffer.from(s, "utf8"));
 
@@ -152,8 +157,8 @@ export async function testBot(
 ): Promise<{ ok: boolean; error?: string }> {
   if (!token || chatIds.length === 0) return { ok: false, error: "token and chat id required" };
   const message =
-    "<b>✅ SideRail bot connected</b>\n\n" +
-    '🔗 <a href="https://github.com/icubaby/SideRail">github.com/icubaby/SideRail</a>\n\n' +
+    "<b>✅ Meridian bot connected</b>\n\n" +
+    `🔗 <a href="${PANEL_REPO}">${PANEL_REPO}</a>\n\n` +
     "⭐️ If you enjoy the project, please give it a star — it means a lot!";
   let anyOk = false;
   let lastError = "";
@@ -175,10 +180,10 @@ export async function sendDailyBackup(): Promise<void> {
   const data = JSON.stringify(exportData(), null, 2);
   const date = new Date().toISOString().slice(0, 10);
   const caption =
-    "<b>🗄 SideRail daily backup</b>\n" +
+    "<b>🗄 Meridian daily backup</b>\n" +
     `<b>Date:</b> ${date}\n` +
     "Keep this file safe — you can restore it from the dashboard.";
   for (const chatId of cfg.chatIds) {
-    await sendDocument(cfg.token, chatId, `siderail-backup-${date}.json`, data, caption);
+    await sendDocument(cfg.token, chatId, `meridian-backup-${date}.json`, data, caption);
   }
 }

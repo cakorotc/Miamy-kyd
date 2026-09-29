@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import { LogIn, User, Lock, Eye, EyeOff, ShieldCheck, Zap, Globe2 } from "lucide-react";
+import { LogIn, User, Lock, Eye, EyeOff, ShieldCheck, Globe2, Zap } from "lucide-react";
 import { AuthShell } from "@/components/layout/auth-layout";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/components/ui/toast";
@@ -48,32 +48,32 @@ export default function LoginPage() {
         <div className="space-y-2">
           <Label htmlFor="username">{t("username")}</Label>
           <div className="relative">
-            <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text/40" />
+            <User className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
             <Input
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               autoComplete="username"
-              className="pl-9"
+              className="ps-9"
             />
           </div>
         </div>
         <div className="space-y-2">
           <Label htmlFor="password">{t("password")}</Label>
           <div className="relative">
-            <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text/40" />
+            <Lock className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
             <Input
               id="password"
               type={showPass ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
-              className="px-9"
+              className="ps-9 pe-9"
             />
             <button
               type="button"
               onClick={() => setShowPass((v) => !v)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-text/40 transition-colors hover:text-text"
+              className="absolute end-3 top-1/2 -translate-y-1/2 text-muted transition-colors hover:text-text"
               tabIndex={-1}
               aria-label={showPass ? "Hide password" : "Show password"}
             >

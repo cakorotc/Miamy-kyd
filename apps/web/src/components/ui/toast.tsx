@@ -28,10 +28,16 @@ const icons = {
   info: Info,
 };
 
-const styles: Record<ToastKind, string> = {
-  success: "bg-lime-300 text-black",
-  error: "bg-red-300 text-black",
-  info: "bg-sky-300 text-black",
+const iconColors: Record<ToastKind, string> = {
+  success: "text-success",
+  error: "text-danger",
+  info: "text-info",
+};
+
+const borderColors: Record<ToastKind, string> = {
+  success: "border-success/40",
+  error: "border-danger/40",
+  info: "border-info/40",
 };
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
@@ -52,20 +58,25 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     <ToastContext.Provider value={{ push }}>
       {children}
       {createPortal(
-        <div className="fixed bottom-4 right-4 z-[100] flex w-[min(360px,calc(100vw-2rem))] flex-col gap-2">
+        <div className="fixed bottom-4 end-4 z-[100] flex w-[min(360px,calc(100vw-2rem))] flex-col gap-2">
           {items.map((t) => {
             const Icon = icons[t.kind];
             return (
               <div
                 key={t.id}
                 className={cn(
-                  "flex items-start gap-3 rounded-base border-2 border-border p-3 neo-shadow animate-pop-in",
-                  styles[t.kind],
+                  "flex items-start gap-3 rounded-base border bg-surface p-3 shadow-pop animate-pop-in",
+                  borderColors[t.kind],
                 )}
               >
-                <Icon className="mt-0.5 h-5 w-5 shrink-0" />
-                <span className="flex-1 text-sm font-heading break-words">{t.message}</span>
-                <button onClick={() => remove(t.id)} className="opacity-70 hover:opacity-100">
+                <Icon className={cn("mt-0.5 h-5 w-5 shrink-0", iconColors[t.kind])} />
+                <span className="flex-1 break-words text-sm font-semibold text-text">
+                  {t.message}
+                </span>
+                <button
+                  onClick={() => remove(t.id)}
+                  className="text-muted transition-colors hover:text-text"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
